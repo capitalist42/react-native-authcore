@@ -23,14 +23,14 @@ export default class WebAuth {
       this.agent.newTransaction().then(({ state, verifier, ...defaults }) => {
         // return new Promise((resolve, reject) => {
         // TODO: Not to fix the redirect URI
-        const redirectUri = `${bundleIdentifier}://`
+        const redirectURI = `${bundleIdentifier}://`
         const expectedState = state
         const payloadForAuthorizeUrl = apply({
           parameters: {
-            redirectUri: { required: true, toName: 'redirect_uri' },
-            responseType: { required: true, toName: 'response_type' },
+            redirectURI: { required: true, toName: 'redirectURI' },
+            responseType: { required: true, toName: 'responseType' },
             state: { required: true },
-            clientId: { required: false, toName: 'client_id' },
+            clientId: { required: false, toName: 'clientId' },
             logo: { required: false },
             company: { required: false },
             primaryColour: { required: false },
@@ -44,8 +44,8 @@ export default class WebAuth {
           whitelist: false
         }, {
           ...defaults,
-          response_type: 'code',
-          redirect_uri: redirectUri,
+          responseType: 'code',
+          redirectURI: redirectURI,
           state: expectedState,
           clientId: this.client.clientId,
           company: this.client.company,
@@ -61,8 +61,8 @@ export default class WebAuth {
         const initialScreen = this.client.initialScreen
         const authorizeUrl = this.client.url(`/widgets/${initialScreen}`, payloadForAuthorizeUrl)
         this.agent.show(authorizeUrl, false).then((redirectUrl) => {
-          if (!redirectUri) {
-            throw new Error('redirectUri cannot be empty. Please provide the value')
+          if (!redirectURI) {
+            throw new Error('redirectURI cannot be empty. Please provide the value')
           }
           const query = url.parse(redirectUrl, true).query
           const { code, state: resultState } = query
